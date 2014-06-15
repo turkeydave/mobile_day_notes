@@ -126,6 +126,10 @@ I also skimped on any type of modules, everything is on the host / window object
     2. Once in a while pycharm / node would get buggered, and I know now that i had to kill the node process, but there was some bizarre behavior and time spent realizing what the issue is.
 * Even though I told myself not too, and requirements said the same, net I spent way to much time on look and feel (not that its that great! :-) )
   I couldn't help doing some stuff, but looking back that was silly and only for my benefit.
+  
+  
+  ## update:
+  In hindsight now I think the client data service is prime candidate for promises instead of the callback method I used.  Maybe I'll add that to my future list.
 
 
 
