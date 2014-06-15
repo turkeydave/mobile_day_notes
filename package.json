@@ -1,5 +1,5 @@
 {
-  "name": "mobile day project",
+  "name": "mobile_day_notes",
   "main": "server.js",
   "dependencies": {
     "express": "~3.4.8",
