@@ -1,6 +1,6 @@
 # Dave Kilmoyer - Mobile Day Note App
 
-This is a project that accomplishes #2 on the assignment: Notes App
+This is a project that accomplishes #2 on the assignment: Notes App. 
 It is supposed to accomplish (my understanding):
 
 1. User can enter a note and its persisted so its available next session
@@ -20,7 +20,7 @@ For the multiple device consideration I chose a web app, and made sure it was re
 
 * mongolab - hosted mongodb db service (free dev)
 * stores two type of obj documents (users and notes)
-* mongoose - uses mongoose abstraction layer to define schema, provide some out of the box validation, and make persisting objects easy
+* mongoose - uses mongoose abstraction layer to define schema, provide some out of the box validation, and make persisting objects easy.  
     I selfishly used this as an opportunity to learn it
 
 **client**
@@ -49,13 +49,13 @@ Overall I was shooting for a good balance between functionality, a little look a
 **server / persistence**
 
 Choosing node for real-time messaging between connected clients was a pretty easy one, and one I wanted to personally use to learn it more.  I've yet to be able to use node.js in production.
-There are other options - for examlpe SignalR by Microsoft and client-side polling techniques... but real time messaging is cooler.
+There are other options - for example SignalR by Microsoft and client-side polling techniques... but real time messaging is cooler.
 On the server, I tried to at least compartmentalize config and routes so it was not ALL dumped in one file.  In the startup file I tried to organize things into sections of similar function for readability.
 
 I envisioned only needing one 'single page entry point' for this app, and most to be api/endpoint type handling for the client.  There were going to be two types of work: data 
 manipulation (persistence and retrieval), and messaging (with relevant payload).
 
-As far as choosing mongo, the relatively straighforward domain objects scream a document / no-sql persistence solution.  Mongo is great because its json, and json is pretty easy to consume in javascript.
+As far as choosing mongo, the relatively straightforward domain objects scream a document / no-sql persistence solution.  Mongo is great because its json, and json is pretty easy to consume in javascript.
 I had a dev account on mongolab, so I figured it was be easiest to use that, especially for others to use.  Mongoose makes it very easy to persist and manipulate objects to mongodb.
 
 **client**
@@ -67,7 +67,7 @@ I had a few personal goals the app (not all accomplished):
 * demonstrate at least some code best practices and/or logic orgainization
     * services (managers) for some of the cross cutting functionality - data service for dealing with domain objects, and a socket service to encapsulate all things related to messaging
     * an app viewmodel that handles the business logic - and brokers data and user interactions for the view.  The view should be free of logic.
-    * while i'm not sharing code between server and client, i AM using the same domain models, and the data service is an interface into and exposing the server api
+    * while I'm not sharing code between server and client, I am using the same domain models, and the data service is an interface into and exposing the server api
 
 * demonstrate use of a framework that uses two way binding for code logic simplification and good user experience
 
@@ -83,7 +83,7 @@ Reach goals:
 
 * if time explore some sort of native (probably embedded web view) cordova solution
 
-* not spend too much time (i knew that the writeup, polishing a repo, making sure it was 'setupable' by others etc... was going to take time too)
+* not spend too much time (I knew that the writeup, polishing a repo, making sure it was 'installable' by others etc... was going to take time too)
 
 So, I chose knockout.js because I'm familiar with it and it provides two way binding and an MVVM pattern with relatively low overhead.  There's one main app viewmodel.
 
@@ -99,15 +99,15 @@ This happens in the temporary 'seedUser()'.  Upon success, I load that user's no
 This best prepares for if there was a login (they login and on success the client would get a valid User object, and their notes would be loaded).
 Knockout's binding, via the viewmodel takes care of the rest of updating the ui and reacting to user input and socket messages.
 
-I skimped on any other viewmodels/controllers for other functionality and glombed all into one.  A few other small one's could be one for an actual Note, and one for User Auth / Context.
+I skimped on any other viewmodels/controllers for other functionality and glombed all into one.  A few other small viewmodel candidates are one for an actual Note, and one for User Auth / Context.
 I also skimped on any type of modules, everything is on the host / window object as globals.  I DO use dependency injection for the viewmodel itself - i inject the data and socket service.
 
 
 ## What went wrong, what would I do differently?
 
-* Generally, I think should have done the MINIMUM requirements and spent more time on better client code perhaps. (see next line for an example)  Then I could have added anything above and beyond.
+* Generally, I should have done the MINIMUM requirements and spent more time on better client code. (see next line for an example)  Then I could have added anything 'above and beyond'.
 * The biggest thing thats sticking in my head is what i'm calling the "collossal hack" ** see /services/socketservice.js.   
-  If you look in the sockets service, I aslo have the global socket reference and set up some event handlers.
+  If you look in the sockets service, I also have the global socket reference and set up some event handlers.
   I had to call into the viewmodel, so I made it global so it was available in context.  Its pretty 'smelly' but I moved on.  I should have spent more time thinking about an app context and done this differently.
   I'll submit this project on master branch, and if I work on a different solution i'll make a branch and let you know.
 * I spent way too much time troubleshooting one issue with knockout binding (nuance between child binding in observable array, difference between click and text binding).
@@ -115,16 +115,16 @@ I also skimped on any type of modules, everything is on the host / window object
   
 * (Related to the next one) Somehow I got it my head to use io.sockets.emit() on the server, which broadcasts to all clients vs. socket.broadcast, which messages all clients except itself.
   While I'm no node/socket.io expert, I know that I knew that at some point :-).  Anyway, I was in the middle of rocking out a system to track connected clients with their ids and emitting
-  messages to only others when i remembered? socket.broadcast.  Waste of time.
-* Sometimes I need to slow down and read any docs better.  For example, some of the bootstrap existing classes did exactly what I needed, and i only discovered it after 
-  something seeming to take more time that it should or while purusing the docs for something else.
+  messages to only others when I remembered(?) socket.broadcast.  Waste of time.
+* Sometimes I need to slow down and read the docs better.  For example, some of the bootstrap existing classes did exactly what I needed, and i only discovered them after 
+  after the fact, or looking for something else.
 * I really think at least a few tests would have saved time - some client api tests hacked together to always test the api / json for example. 
 * Didn't meet all of my goals (not login), and didn't get to any 'reach' goals - I guess I over committed in my head :-)
 * Know your tools! : I use pycharm for work and knew how awesome the testing is for node server code. Two things cost me time tho...
     1. I was mucking around with remote debugging and the weird chrome extension client debugging - becuse it was 'there'.  Much better to keep node server running in debug, and use chrome dev tools or the like
-       to debug client side js, and then set breakpoints as needed to test specific server side.  (that heavy remote debugging DOES work amazingly)
-    2. Once in a while pycharm / node would get buggered, and I know now that i had to kill the node process, but there was some bizarre behavior and time spent realizing what the issue is.
-* Even though I told myself not too, and requirements said the same, net I spent way to much time on look and feel (not that its that great! :-) )
+       to debug client side js, and then set breakpoints as needed to test specific server side.  (that heavy remote debugging DOES work though amazingly)
+    2. Once in a while pycharm / node would get buggered, and I know now that i had to kill the node process, but until then there was some bizarre behavior and time spent realizing what the issue is.
+* Even though I told myself not to, and requirements said the same, net I spent way to much time on look and feel (not that its that great! :-) )
   I couldn't help doing some stuff, but looking back that was silly and only for my benefit.
   
   
