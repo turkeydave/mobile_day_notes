@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1">
+	<meta charset="UTF-8">
+	<base href="/">
+	<title>Mobile Day - Dyno Note Application</title>
+	<link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top" style="height: 75px;">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/"><img src="css/mobileday-logo-small.png" style="height:50px;" alt="no logo"> Mobile Day - Note App</a>
+    </div>
+<!--    <ul class="nav navbar-nav">
+        <li><a href="/">Link</a></li>
+        <li><a href="/">Link 2</a></li>
+    </ul>
+-->
+</div>
+
+<div class="container">
+    <div class="col-lg-12 first-row">
+        <div class="page-header"><strong>Current User: <span data-bind="text: userDisplayName"></span></strong></div>
+    </div>
+    <div class="col-lg-12">
+        <div><h4>Enter New Note</h4></div>
+        <div id="frmCatGroup" class="form-group">
+            <label for="category">Category</label>
+            <input type="text" class="form-control" id="category" placeholder="Enter category" data-bind="value:newNoteCat">
+        </div>
+        <div id="frmNoteGroup" class="form-group">
+            <label for="note">Note</label>
+            <textarea data-bind="value: newNoteNote" class="form-control" placeholder="Enter notes ..." id="note"></textarea>
+        </div>
+         <div>
+            <button class="btn btn-success" data-bind="click:addNewNote">Add New Note</button>
+        </div>
+    </div>
+    <div style="margin-top: 20px;" class="col-lg-12">
+        <div class="page-header"><strong>Your Notes</strong></div>
+        <div id="noNotesYet" style="display: none">No notes yet entered ....</div>
+        <div id="notesDiv" data-bind="foreach:notes" style="display:none">
+            <div class="col-md-4 note-div">
+                <div class="note-div-inner">
+                    <div><h5 data-bind="text:$parent.prettyDate($data)"></h5></div>
+                    <div><strong data-bind="text:category"></strong></div>
+                    <div><em>entered by: <span data-bind="text:user"></span></em></div>
+                    <div class="text-center" data-bind="text:note"></div>
+                    <a data-bind="click:$parent.nukeNote">(remove)</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 reload-div">
+        <button id="btnReload" class="btn btn-success" data-bind="click:listNotesForUser">Reload Your Notes</button>
+    </div>
+</div>
+
+<!-- quick and dirty boostrap modal box for alerts -->
+<div id="msgBox" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 id="newNoteModalTitle" class="modal-title">New Note!!!</h4>
+      </div>
+      <div id="newNoteModalContent" class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- get these guys from cdn -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
+
+<!-- this url auto-gen-ed by server -->
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="js/services/dataservice.js"></script>
+<script src="js/services/socketservice.js"></script>
+<script src="js/viewmodels/viewmodels.js"></script>
+<script src="libs/bootstrap/js/modal.js"></script>
+<script>
+//    function addFirstUser(){
+//        $.ajax({
+//            url: '/api/addUser',
+//            data: {
+//                name: 'First User Guy',
+//                email: 'firstguy@nasa.gov',
+//                title:'The Dudeness',
+//                password: 'password'
+//            },
+//            cache: false,
+//            dataType: "json",
+//            type: "POST"
+//        }).done(function(data) {
+//           if(data){
+//               console.log(data);
+//           }
+//        }).fail(function(jqXHR, textStatus, errorThrown) {
+//           console.log(errorThrown);
+//        });
+//    } // add first user
+
+//    // our one and only app object
+//    var noteApp = {
+//        appVM: null,
+//        start: function(){
+//
+//        }
+//    };
+
+    // our one and only app viewmodel (mothership)
+    var appVM = null;
+
+    // document ready handler
+    $(document).ready(function(){
+        // using knockout.js here ......
+
+        // NOTE: these 3 things comprise of 'starting and initializing' the app
+        // get our main app view model (small app, just one viewmodel)
+        appVM = new AppViewModel(dataservice, socketservice);
+
+        // until i have login, seed current user
+        //     NOTE: after first user is set, it will async try to load that user's notes
+        appVM.seedUser();
+
+        // bind our viewmodel to our view
+        ko.applyBindings(appVM);
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+body { padding-top:30px; }
+.note-div {padding: 15px;}
+.note-div-inner { padding: 15px; background-color: #c9e2b3}
+.first-row{margin-top:60px}
+.reload-div {clear:both;margin-top: 30px}
+@media (max-width: 768px) {
+    .navbar-nav { display:none; }
+}
