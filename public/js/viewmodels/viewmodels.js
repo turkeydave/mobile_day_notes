@@ -112,6 +112,31 @@ function AppViewModel(dataservice, socketservice){
         }
     };
 
+    // call backs for note messages for other clients
+    self.newNoteMessageFromOtherClient = function(note){
+        self.notes.push(note);
+        var msg =  'Hey, theres a new note: ' + note.note;
+        $('#newNoteModalTitle').html('New Note Added');
+        $('#newNoteModalContent').html(msg);
+        $('#msgBox').modal();
+    };
+    self.nukeNoteMessageFromOtherClient = function(note){
+        // need to find our note
+        var notes = self.notes(),
+            toNuke = null;
+        for(var i= 0, l=notes.length; i<l; i++){
+            if(note._id == notes[i]._id){
+                toNuke = notes[i];
+                break;
+            }
+        }
+        self.notes.remove(toNuke);
+        var msg =  'Not removed : (_id): ' + note._id;
+        $('#newNoteModalTitle').html('Note Removed');
+        $('#newNoteModalContent').html(msg);
+        $('#msgBox').modal();
+    };
+
     // part of the great collossal hack (will come back if time)
     self.addExternalNoteToCollection = function(note){
         self.notes.push(note);

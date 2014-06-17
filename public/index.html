@@ -111,32 +111,39 @@
 //        });
 //    } // add first user
 
-//    // our one and only app object
-//    var noteApp = {
-//        appVM: null,
-//        start: function(){
-//
-//        }
-//    };
+    // our one and only app object
+    var mobileDayNoteApp = {
+        appVM: null,
+        dataservice: null,
+        socketservice: null,
 
-    // our one and only app viewmodel (mothership)
-    var appVM = null;
+        start: function(){
+            // instantiate our service instances
+            this.socketservice = new SocketService(io);  // io exposed in client socket.io lib
+            this.dataservice = new DataService();
+
+            // create our one and only app view model
+            this.appVM = new AppViewModel(this.dataservice, this.socketservice);
+
+            // set socket service call backs for handling when messages received
+            this.socketservice.setCallbacks(this.appVM.newNoteMessageFromOtherClient, this.appVM.nukeNoteMessageFromOtherClient);
+
+            // until i have login, seed current user
+            //     NOTE: after first user is set, it will async try to load that user's notes
+            this.appVM.seedUser();
+
+            // using knockout.js here ...... assumes its been loaded, thats why this start() is called on doc ready
+            // bind our viewmodel to our view
+            ko.applyBindings(this.appVM);
+        }
+    };
 
     // document ready handler
     $(document).ready(function(){
-        // using knockout.js here ......
 
-        // NOTE: these 3 things comprise of 'starting and initializing' the app
-        // get our main app view model (small app, just one viewmodel)
-        appVM = new AppViewModel(dataservice, socketservice);
-
-        // until i have login, seed current user
-        //     NOTE: after first user is set, it will async try to load that user's notes
-        appVM.seedUser();
-
-        // bind our viewmodel to our view
-        ko.applyBindings(appVM);
-
+        // kick off our app!!
+        mobileDayNoteApp.start();
+        
     });
 </script>
 </body>
